@@ -6,10 +6,9 @@ import os
 import re
 from datetime import datetime
 import pretty
+import logging
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
-
-from jinja2 import Environment, PackageLoader
 
 HTML_START = """
 <!DOCTYPE html>
@@ -55,9 +54,22 @@ HTML_END = """
   </body>
 </html>"""
 
+def cardid_by_memberid(cards):
+    cardid_by_memberid = {}
+
+    for card in cards:
+        for member_id in card.member_ids:
+            if member_id not in cardid_by_memberid.keys():
+                cardid_by_memberid[member_id] = set()
+
+            cardid_by_memberid[member_id].add(card.id)
+
+    return cardid_by_memberid
+
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
     trello = TrelloClient(os.environ['TRELLO_API_KEY'], token=os.environ['TRELLO_TOKEN'])
-#    tmplt_env = Environment(loader=PackageLoader('syseng', 'templates'))
 
     # lets get all the boards goern can read and filter out the Sys-Eng board
     for board in trello.list_boards():
@@ -68,6 +80,8 @@ if __name__ == "__main__":
     for list in syseng_board.all_lists():
         if list.name == 'Work In Progress (Committed)':
             wip_cards = list.list_cards()
+
+    cardid_by_memberid = cardid_by_memberid(wip_cards)
 
     print(HTML_START)
 
@@ -89,14 +103,21 @@ if __name__ == "__main__":
                     else:
                         print('<span class="label label-success">&nbsp;</span>')
 
-                if card_name.find("[%s]" % (member.username)) != -1:
+                # check if a member's name is present in the card's name,
+                # if so, the card is own by that member
+                if card_name.find("[%s]" % (member.username)) > -1:
                     print("""%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name)))
 
                     card.fetch()
                     if card.due != '':
                         print("due: %s" % pretty.date(datetime.strptime(card.due, "%Y-%m-%dT%H:%M:%S.000Z")))
+
                 else:
                     print("%s" % (card_name))
+
+                if (card.id in cardid_by_memberid[member.id]) and (card_name.find("[%s]" % (member.username)) == -1):
+                    print("""&nbsp;<span class="label label-default">supporting</span>""")
+
 
                 print('</p>')
 

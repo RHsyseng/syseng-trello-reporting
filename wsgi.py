@@ -20,6 +20,18 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 #
 
+def cardid_by_memberid(cards):
+    cardid_by_memberid = {}
+
+    for card in cards:
+        for member_id in card.member_ids:
+            if member_id not in cardid_by_memberid.keys():
+                cardid_by_memberid[member_id] = set()
+
+            cardid_by_memberid[member_id].add(card.id)
+
+    return cardid_by_memberid
+
 def application(environ, start_response):
 
     ctype = 'text/plain'
@@ -76,6 +88,8 @@ body {
             if list.name == 'Work In Progress (Committed)':
                 wip_cards = list.list_cards()
 
+        cardid_by_memberid = cardid_by_memberid(wip_cards)
+
         for member in syseng_board.get_members():
             response_body += """<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username)
 
@@ -102,6 +116,9 @@ body {
                             response_body += "due: %s" % (card.due.encode('utf-8'))
                     else:
                         response_body += "%s" % (card_name)
+
+                    if (card.id in cardid_by_memberid[member.id]) and (card_name.find("[%s]" % (member.username)) == -1):
+                        response_body += """&nbsp;<span class="label label-default">supporter</span>"""
 
                     response_body += '</p>'
 
