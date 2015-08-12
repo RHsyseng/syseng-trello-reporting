@@ -58,20 +58,6 @@ body {
   color: #333333;
   background-color: #ffffff;
 }
-
-.theme-dropdown .dropdown-menu {
-  position: static;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.theme-showcase > p > .btn {
-  margin: 5px 0;
-}
-
-.theme-showcase .navbar .container {
-  width: auto;
-}
         </style>
     </head>
     <body>'''

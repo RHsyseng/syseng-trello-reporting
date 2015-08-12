@@ -26,25 +26,19 @@ HTML_START = """
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
    <![endif]-->
    <style>
-   body {
-  padding-top: 70px;
-  padding-bottom: 30px;
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
-
-.theme-dropdown .dropdown-menu {
-  position: static;
-  display: block;
-  margin-bottom: 20px;
+body {
+  font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.42857143;
+  color: #333333;
+  background-color: #ffffff;
 }
-
-.theme-showcase > p > .btn {
-  margin: 5px 0;
-}
-
-.theme-showcase .navbar .container {
-  width: auto;
-}
-
    </style>
   </head>
   <body role="document">
