@@ -59,8 +59,34 @@ def application(environ, start_response):
             if list.name == 'Work In Progress (Committed)':
                 wip_cards = list.list_cards()
 
+        for member in syseng_board.get_members():
+            print("""<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username))
 
-        response_body += '''</div><!-- container -->
+            # lets print all cards one of us is working on
+            for card in wip_cards:
+                if member.id in card.member_ids:
+                    card_name = card.name
+
+                    print('<p>')
+
+                    for label in card.labels:
+                        if label.name == 'Issues':
+                            print('<span class="label label-warning">&nbsp;</span>')
+                        elif label.name == 'Blocked':
+                            print('<span class="label label-danger">&nbsp;</span>')
+                        else:
+                            print('<span class="label label-success">&nbsp;</span>')
+
+                    if card_name.find("[%s]" % (member.username)) != -1:
+                        print("""%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name)))
+                    else:
+                        print("%s" % (card_name))
+
+                    print('</p>')
+
+            print('</div></div><!-- row -->')
+
+        response_body += '''<!-- container -->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
