@@ -91,7 +91,14 @@ body {
         cardid_by_memberid = get_cardid_by_memberid(wip_cards)
 
         for member in syseng_board.get_members():
-            response_body += """<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username)
+            num_cards = 0
+
+            try:
+                num_cards = len(cardid_by_memberid[member.id])
+            except:
+                pass
+                
+            response_body += """<div class="row"><div class="col-md-12"><h2>%s <span class="badge">%s</span> (%s)</h2>""" % (member.full_name, num_cards, member.username)
 
             # lets print all cards one of us is working on
             for card in wip_cards:
@@ -109,7 +116,7 @@ body {
                             response_body += '<span class="label label-success">&nbsp;</span>'
 
                     if card_name.find("[%s]" % (member.username)) != -1:
-                        response_body += """%s<span class="label label-info">owner</span>&nbsp;""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
+                        response_body += """%s<span class="label label-primary">owner</span>&nbsp;""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
 
                         card.fetch()
                         if card.due != '':

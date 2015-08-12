@@ -86,7 +86,14 @@ if __name__ == "__main__":
     print(HTML_START)
 
     for member in syseng_board.get_members():
-        print("""<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username))
+        num_cards = 0
+
+        try:
+            num_cards = len(cardid_by_memberid[member.id])
+        except:
+            pass
+
+        print("""<div class="row"><div class="col-md-12"><h2>%s <span class="badge">%s</span> (%s)</h2>""" % (member.full_name, num_cards, member.username))
 
         # lets print all cards one of us is working on
         for card in wip_cards:
