@@ -20,7 +20,7 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 #
 
-def cardid_by_memberid(cards):
+def get_cardid_by_memberid(cards):
     cardid_by_memberid = {}
 
     for card in cards:
@@ -88,7 +88,7 @@ body {
             if list.name == 'Work In Progress (Committed)':
                 wip_cards = list.list_cards()
 
-        cardid_by_memberid = cardid_by_memberid(wip_cards)
+        cardid_by_memberid = get_cardid_by_memberid(wip_cards)
 
         for member in syseng_board.get_members():
             response_body += """<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username)
