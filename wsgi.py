@@ -60,7 +60,7 @@ def application(environ, start_response):
                 wip_cards = list.list_cards()
 
         for member in syseng_board.get_members():
-            print("""<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username))
+            response_body += """<div class="row"><div class="col-md-12"><h2>%s (%s)</h2>""" % (member.full_name, member.username)
 
             # lets print all cards one of us is working on
             for card in wip_cards:
@@ -71,20 +71,20 @@ def application(environ, start_response):
 
                     for label in card.labels:
                         if label.name == 'Issues':
-                            print('<span class="label label-warning">&nbsp;</span>')
+                            response_body += '<span class="label label-warning">&nbsp;</span>'
                         elif label.name == 'Blocked':
-                            print('<span class="label label-danger">&nbsp;</span>')
+                            response_body += '<span class="label label-danger">&nbsp;</span>'
                         else:
-                            print('<span class="label label-success">&nbsp;</span>')
+                            response_body += '<span class="label label-success">&nbsp;</span>'
 
                     if card_name.find("[%s]" % (member.username)) != -1:
-                        print("""%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name)))
+                        response_body += """%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
                     else:
-                        print("%s" % (card_name))
+                        response_body += "%s" % (card_name)
 
-                    print('</p>')
+                    response_body += '</p>'
 
-            print('</div></div><!-- row -->')
+            response_body += '</div></div><!-- row -->'
 
         response_body += '''<!-- container -->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
