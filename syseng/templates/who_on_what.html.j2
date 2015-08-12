@@ -1,0 +1,35 @@
+{% extends "layout.html.j2" %}
+{% block content %}
+<h1>Group Members</h1>
+<ul>
+  {% for user in members %}<li>{{ user.username|e }}</li>
+  {% endfor %}
+</ul>
+
+{% for member in members %}
+  <h2>{{ member.full_name }} is working on</h2>
+  <p>
+  {% for card in cards %}
+  <strong>{{ card.name }}</strong>
+<!--
+    # lets print all cards one of us is working on
+    for card in wip_cards:
+        if member.id in card.member_ids:
+            card_name = card.name
+
+            if card_name.find("[%s]" % (member.username)) != -1:
+                print("\t%s\n\t\t%s is responsible for finishing this task." % (re.sub('\[[%s]*\]' % (member.username), '', card_name), member.full_name))
+            else:
+                print("\t%s" % (card_name))
+
+            for label in card.labels:
+                if label.name == 'Issues':
+                    print("\t\tThis task has some ISSUES!")
+                elif label.name == 'Blocked':
+                    print("\t\tThis task is BLOCKED!")
+-->
+  {% endfor %}
+  </p>
+{% endfor %}
+
+{% endblock %}
