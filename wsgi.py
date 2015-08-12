@@ -9,6 +9,9 @@ from datetime import datetime
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
+# Application Configuration Section
+APPLICATION_CONFIGURATION_SUPPORTER_ENABLED = False
+
 virtenv = os.environ['OPENSHIFT_PYTHON_DIR'] + '/virtenv/'
 virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
 try:
@@ -97,7 +100,7 @@ body {
                 num_cards = len(cardid_by_memberid[member.id])
             except:
                 pass
-                
+
             response_body += """<div class="row"><div class="col-md-12"><h2>%s <span class="badge">%s</span> (%s)</h2>""" % (member.full_name, num_cards, member.username)
 
             # lets print all cards one of us is working on
@@ -124,8 +127,9 @@ body {
                     else:
                         response_body += "%s" % (card_name)
 
-                    if (card.id in cardid_by_memberid[member.id]) and (card_name.find("[%s]" % (member.username)) == -1):
-                        response_body += """&nbsp;<span class="label label-default">supporter</span>"""
+                    if APPLICATION_CONFIGURATION_SUPPORTER_ENABLED == True:
+                        if (card.id in cardid_by_memberid[member.id]) and (card_name.find("[%s]" % (member.username)) == -1):
+                            response_body += """&nbsp;<span class="label label-default">supporter</span>"""
 
                     response_body += '</p>'
 
