@@ -99,7 +99,7 @@ body {
 
                         card.fetch()
                         if card.due != '':
-                            response_body += "due: %s" % (card.due)
+                            response_body += "due: %s" % (card.due.encode('utf-8'))
                     else:
                         response_body += "%s" % (card_name)
 
