@@ -95,7 +95,7 @@ body {
                             response_body += '<span class="label label-success">&nbsp;</span>'
 
                     if card_name.find("[%s]" % (member.username)) != -1:
-                        response_body += """%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
+                        response_body += """%s<span class="label label-info">owner</span>&nbsp;""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
 
                         card.fetch()
                         if card.due != '':
