@@ -6,7 +6,6 @@ import os
 import re
 
 from datetime import datetime
-import pretty
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
@@ -100,7 +99,7 @@ body {
 
                         card.fetch()
                         if card.due != '':
-                            response_body += "due: %s" % pretty.date(datetime.strptime(card.due, "%Y-%m-%dT%H:%M:%S.000Z"))
+                            response_body += "due: %s" % (card.due)
                     else:
                         response_body += "%s" % (card_name)
 
