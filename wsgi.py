@@ -4,7 +4,9 @@
 from __future__ import with_statement, print_function
 import os
 import re
+
 from datetime import datetime
+import pretty
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
