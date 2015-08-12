@@ -83,7 +83,7 @@ body {
                 if member.id in card.member_ids:
                     card_name = card.name
 
-                    print('<p>')
+                    response_body += '<p>'
 
                     for label in card.labels:
                         if label.name == 'Issues':
@@ -95,6 +95,10 @@ body {
 
                     if card_name.find("[%s]" % (member.username)) != -1:
                         response_body += """%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name))
+
+                        card.fetch()
+                        if card.due != '':
+                            response_body += "due: %s" % pretty.date(datetime.strptime(card.due, "%Y-%m-%dT%H:%M:%S.000Z"))
                     else:
                         response_body += "%s" % (card_name)
 

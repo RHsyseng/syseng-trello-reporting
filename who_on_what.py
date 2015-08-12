@@ -5,6 +5,7 @@ from __future__ import with_statement, print_function
 import os
 import re
 from datetime import datetime
+import pretty
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
@@ -90,6 +91,10 @@ if __name__ == "__main__":
 
                 if card_name.find("[%s]" % (member.username)) != -1:
                     print("""%s<span class="label label-info">owner</span>""" % (re.sub('\[[%s]*\]' % (member.username), '', card_name)))
+
+                    card.fetch()
+                    if card.due != '':
+                        print("due: %s" % pretty.date(datetime.strptime(card.due, "%Y-%m-%dT%H:%M:%S.000Z")))
                 else:
                     print("%s" % (card_name))
 
