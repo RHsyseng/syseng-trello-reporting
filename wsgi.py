@@ -57,6 +57,7 @@ body {
   line-height: 1.42857143;
   color: #333333;
   background-color: #ffffff;
+  padding: 30px;
 }
         </style>
     </head>
