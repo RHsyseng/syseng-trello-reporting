@@ -93,7 +93,7 @@ body {
 
         cardid_by_memberid = get_cardid_by_memberid(wip_cards)
 
-        response_body += """<h1>Systems Engineering current assignments</h1>"""
+        response_body += """<h1>Systems Engineering current assignments (WIP)</h1>"""
 
         for member in syseng_board.get_members():
             num_cards = 0
