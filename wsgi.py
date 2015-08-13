@@ -6,6 +6,7 @@ import os
 import re
 
 from datetime import datetime
+import pretty
 
 from trello import TrelloClient, Unauthorized, ResourceUnavailable
 
@@ -93,7 +94,7 @@ body {
 
         cardid_by_memberid = get_cardid_by_memberid(wip_cards)
 
-        response_body += """<h1>Systems Engineering current assignments</h1>"""
+        response_body += """<h1>Systems Engineering current assignments (WIP)</h1>"""
 
         for member in syseng_board.get_members():
             num_cards = 0
@@ -125,7 +126,7 @@ body {
 
                         card.fetch()
                         if card.due != '':
-                            response_body += "due: %s" % (card.due.encode('utf-8'))
+                            response_body += "due: %s" % (pretty.date(datetime.strptime(card.due, "%Y-%m-%dT%H:%M:%S.000Z")))
                     else:
                         response_body += "%s" % (card_name)
 
