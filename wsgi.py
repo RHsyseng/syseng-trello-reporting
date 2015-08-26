@@ -24,6 +24,15 @@ except IOError:
 # line, it's possible required libraries won't be in your searchable path
 #
 
+class BoardStatistics:
+    def __init__(self):
+        self.number_of_lists = 0
+        self.number_of_users = 0
+        self.number_of_wip_board_items = 0
+        self.wip_cards_in_red = 0
+        self.wip_cards_in_amber = 0
+        self.wip_cards_in_green = 0
+
 def get_cardid_by_memberid(cards):
     cardid_by_memberid = {}
 
@@ -78,7 +87,14 @@ body {
 }
         </style>
     </head>
-    <body>'''
+    <body role="document">
+        <div class="container" role="main">
+        <h1>Systems Engineering current assignments</h1>
+
+        <div class="container col-md-2">
+          <h2>overview of WIP state</h2>
+          <canvas id="rag_piechart" width="200" height="200">no html5 canvas support?</canvas>
+        </div>'''
 
         trello = TrelloClient(os.environ['TRELLO_API_KEY'], token=os.environ['TRELLO_TOKEN'])
 
@@ -115,10 +131,13 @@ body {
 
                     for label in card.labels:
                         if label.name == 'Issues':
+                            syseng_wip_board_statistics.wip_cards_in_amber += 1
                             response_body += '<span class="label label-warning">&nbsp;</span>'
                         elif label.name == 'Blocked':
+                            syseng_wip_board_statistics.wip_cards_in_red += 1
                             response_body += '<span class="label label-danger">&nbsp;</span>'
                         else:
+                            syseng_wip_board_statistics.wip_cards_in_green += 1
                             response_body += '<span class="label label-success">&nbsp;</span>'
 
                     if card_name.find("[%s]" % (member.username)) != -1:
@@ -138,13 +157,40 @@ body {
 
             response_body += '</div></div><!-- row -->'
 
-        response_body += '''<!-- container -->
+        response_body += """<!-- container -->
+<script>
+Chart.defaults.global.responsive = true;
+var data = [
+                {
+                    value: %s,
+                    color:"red",
+                    highlight: "grey",
+                    label: "red"
+                },
+                {
+                    value: %s,
+                    color: "yellow",
+                    highlight: "grey",
+                    label: "amber"
+                },
+                {
+                    value: %s,
+                    color: "green",
+                    highlight: "grey",
+                    label: "green"
+                }
+]
+
+var ctx = document.getElementById("rag_piechart").getContext("2d");
+var myDoughnutChart = new Chart(ctx).Doughnut(data);
+</script>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 </body>
-</html>'''
+</html>""" % (syseng_wip_board_statistics.wip_cards_in_red, syseng_wip_board_statistics.wip_cards_in_amber, syseng_wip_board_statistics.wip_cards_in_green)
 
     status = '200 OK'
     response_headers = [('Content-Type', ctype), ('Content-Length', str(len(response_body)))]
